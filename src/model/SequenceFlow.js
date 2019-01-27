@@ -1,0 +1,3 @@
+class SequenceFlow {
+  constructor(id = '', )
+}

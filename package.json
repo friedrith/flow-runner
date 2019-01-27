@@ -1,0 +1,20 @@
+{
+  "name": "flow-runner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:friedrith/flow-runner.git",
+  "author": "Thibault Friedrich <thibault.friedrich@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "eslint": "^5.12.1",
+    "eslint-plugin-node": "^8.0.1"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^2.19.0",
+    "enquirer": "^2.3.0",
+    "prompt-choices": "^5.0.0",
+    "xml2js": "^0.4.19"
+  }
+}
