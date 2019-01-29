@@ -10,15 +10,20 @@
 
 > **Flow-runner** only manages BPMN schema for now.
 
-# As a Cli
-
-## Installation
+## Install
 
 ```bash
+# Use as a CLI
 $ npm install -g flow-runner
+
+# Use as a node module
+$ npm install flow-runner
+$ yarn add flow-runner
 ```
 
 ## Getting started
+
+### Use as CLI
 
 ```bash
 # by default, you will be asked everytime there is a choice
@@ -30,18 +35,10 @@ $ flowrunner model.bpmn --manual # ask for confirmation between each step of the
 $ flowrunner model.bpmn --scenario # automatize answers
 ```
 
-# As a Node API
-
-## Installation
-
-```bash
-$ npm install flow-runner
-```
-
-## Getting started
+### Node API
 
 ```js
-const flowrunner = require('flowrunner')
+const flowrunner = require('flow-runner')
 
 flowrunner.parser.parseFilename('model.bpmn').then(models => {
   const runner = new flowrunner.Runner(
@@ -89,3 +86,5 @@ flowrunner.parser.parseFilename('model.bpmn').then(models => {
   runner.start()
 })
 ```
+
+## License
