@@ -6,13 +6,19 @@ const InitialEvent = require('./model/InitialEvent')
 const FinalEvent = require('./model/FinalEvent')
 
 class Runner extends EventEmitter {
-  constructor(flow, { mode = 'automatic', interval = 0 } = {}) {
+  constructor(
+    flow,
+    { mode = 'automatic', interval = 0 } = {},
+    scenario = null
+  ) {
     super()
     this.flow = flow
     this.current = null
     this.mode = mode
     this.interval = interval
     this.isPaused = false
+    this.scenario = scenario
+    this.scenarioIndex = 0
   }
 
   start() {
@@ -21,10 +27,8 @@ class Runner extends EventEmitter {
         this.isPaused = false
       } else if (this.flow.initialEvent instanceof InitialEvent) {
         this.current = this.flow.initialEvent
-        this.emit('start', this.current)
       }
-
-      this.next()
+      this.alert()
     }
   }
   pause() {
@@ -34,6 +38,34 @@ class Runner extends EventEmitter {
     this.isPaused = false
     this.current = null
   }
+
+  alert() {
+    if (!this.current || this.isPaused) {
+      return
+    }
+
+    if (this.current instanceof InitialEvent) {
+      this.emit('start', this.current)
+    } else if (this.current instanceof FinalEvent) {
+      this.emit('end', this.current)
+      return
+    } else if (this.current instanceof Event) {
+      this.emit('event', this.current)
+    } else if (this.current instanceof Gateway) {
+      this.emit('gateway', this.current)
+    } else if (this.current instanceof Activity) {
+      this.emit('activity', this.current)
+    }
+
+    if (this.mode === 'automatic') {
+      setTimeout(() => {
+        this.next()
+      }, this.interval)
+    } else {
+      this.emit('pause-requested')
+    }
+  }
+
   next(id = null) {
     if (!this.current || this.isPaused) {
       return
@@ -44,7 +76,16 @@ class Runner extends EventEmitter {
       if (this.current.outputs.length === 1) {
         this.current = this.current.outputs[0].target
       } else if (this.current.outputs.length > 1) {
-        if (id) {
+        if (this.scenario) {
+          const nextNode = this.current.outputs.find(
+            output => output.condition === this.scenario[this.scenarioIndex]
+          )
+          this.current = nextNode.target
+          this.scenarioIndex += 1
+          this.emit('choice-made', {
+            choice: nextNode,
+          })
+        } else if (id) {
           const nextNode = this.current.outputs.find(
             output => output.target.id === id
           ).target
@@ -74,22 +115,7 @@ class Runner extends EventEmitter {
       return
     }
 
-    if (this.current instanceof FinalEvent) {
-      this.emit('end', this.current)
-      return
-    } else if (this.current instanceof Event) {
-      this.emit('event', this.current)
-    } else if (this.current instanceof Gateway) {
-      this.emit('gateway', this.current)
-    } else if (this.current instanceof Activity) {
-      this.emit('activity', this.current)
-    }
-
-    if (this.mode === 'automatic') {
-      setTimeout(() => {
-        this.next()
-      }, this.interval)
-    }
+    this.alert()
   }
 }
 

@@ -4,6 +4,7 @@ class Gateway {
     this.label = label
     this.inputs = inputs
     this.outputs = outputs
+    this.type = ''
   }
 }
 

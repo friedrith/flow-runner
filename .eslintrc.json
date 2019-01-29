@@ -1,5 +1,6 @@
 {
   "extends": ["eslint:recommended", "plugin:node/recommended"],
+  "plugins": ["jest"],
   "rules": {
     "semi": [2, "never"],
     "comma-dangle": ["error", "always-multiline"],
@@ -18,5 +19,8 @@
         }
       }
     ]
+  },
+  "env": {
+    "jest/globals": true
   }
 }

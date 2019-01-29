@@ -4,6 +4,7 @@ class Activity {
     this.label = label
     this.input = input
     this.outputs = outputs
+    this.type = ''
   }
 }
 

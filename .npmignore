@@ -1,0 +1,6 @@
+data
+src/__test__
+.editorconfig
+.eslintignore
+.eslintrc.json
+README.md
